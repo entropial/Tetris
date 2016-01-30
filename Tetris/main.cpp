@@ -18,10 +18,12 @@ enum key_surfaces {
 
 SDL_Window* window = NULL;
 SDL_Surface* screen_surface = NULL;
+SDL_Surface* blocks[KEY_PRESS_SURFACE_TOTAL];
+SDL_Surface* current_surface = NULL;
 
 bool init();
 void drawInitialScreen();
-void drawMedia(char*);
+void drawImage(SDL_Surface*);
 SDL_Surface* loadImage(char*);
 
 bool init() {
@@ -60,8 +62,8 @@ SDL_Surface* loadImage(char* location) {
     return image;
 }
 
-void drawMedia(SDL_Surface* media) {
-    SDL_BlitSurface(media, NULL, screen_surface, NULL);
+void drawImage(SDL_Surface* image) {
+    SDL_BlitSurface(image, NULL, screen_surface, NULL);
     SDL_UpdateWindowSurface(window);
 }
 
@@ -69,12 +71,44 @@ void gameLoop() {
     SDL_Event e;
     bool quit = false;
 
+    blocks[KEY_PRESS_SURFACE_DEFAULT] = loadImage("images/orange_block.bmp");
+    blocks[KEY_PRESS_SURFACE_LEFT] = loadImage("images/red_block.bmp");
+    blocks[KEY_PRESS_SURFACE_RIGHT] = loadImage("images/blue_block.bmp");
+    blocks[KEY_PRESS_SURFACE_UP] = loadImage("images/yellow_block.bmp");
+    blocks[KEY_PRESS_SURFACE_DOWN] = loadImage("images/green_block.bmp");
+
     while (!quit) {
         while (SDL_PollEvent(&e) != 0) {
             if (e.type == SDL_QUIT) {
                 quit = true;
             }
+
+            if (e.type == SDL_KEYDOWN) {
+                switch (e.key.keysym.sym) {
+                case SDLK_UP:
+                case SDLK_w:
+                    current_surface = blocks[KEY_PRESS_SURFACE_UP];
+                    break;
+                case SDLK_DOWN:
+                case SDLK_s:
+                    current_surface = blocks[KEY_PRESS_SURFACE_DOWN];
+                    break;
+                case SDLK_LEFT:
+                case SDLK_a:
+                    current_surface = blocks[KEY_PRESS_SURFACE_LEFT];
+                    break;
+                case SDLK_RIGHT:
+                case SDLK_d:
+                    current_surface = blocks[KEY_PRESS_SURFACE_RIGHT];
+                    break;
+                default:
+                    current_surface = blocks[KEY_PRESS_SURFACE_DEFAULT];
+                    break;
+                }
+            }
         }
+        SDL_BlitSurface(current_surface, NULL, screen_surface, NULL);
+        SDL_UpdateWindowSurface(window);
     }
 }
 
@@ -85,12 +119,10 @@ int main(int argc, char* args[]) {
     if (!createWindow()) {
         return WINDOW_DRAW_FAILED;
     }
-
+    SDL_Surface* background_image = loadImage("C:/Users/bry/Documents/Visual Studio 2015/Projects/Project1/Project1/x.bmp");
     drawInitialScreen();
 
-    if (!drawMedia("C:/Users/bry/Documents/Visual Studio 2015/Projects/Project1/Project1/x.bmp")) {
-        printf("Failed to load background image.");
-    }
+    drawImage(background_image);
 
     gameLoop();
 
