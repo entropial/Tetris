@@ -19,4 +19,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\blue_block.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\green_block.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\orange_block.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\red_block.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="images\yellow_block.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
